@@ -20,7 +20,9 @@ class EditRunningRecordFragment : Fragment() {
     private var _binding: FragmentEditRunningRecordBinding? = null
     private val binding get() = _binding!!
     private val args: EditRunningRecordFragmentArgs by navArgs()
-    private lateinit var runningPreferences: SharedPreferences
+    private val runningPreferences by lazy {
+        requireContext().getSharedPreferences("running", Context.MODE_PRIVATE)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +35,6 @@ class EditRunningRecordFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        runningPreferences = requireContext().getSharedPreferences("running", Context.MODE_PRIVATE)
         setupToolbar()
         setupButton()
         setupFields()
@@ -54,6 +55,10 @@ class EditRunningRecordFragment : Fragment() {
         binding.buttonSave.setOnClickListener {
             saveRecord()
         }
+
+        binding.buttonDelete.setOnClickListener {
+            clearRecord()
+        }
     }
 
     private fun saveRecord() {
@@ -61,12 +66,19 @@ class EditRunningRecordFragment : Fragment() {
         val date = binding.editTextDate.text.toString()
 
         runningPreferences.edit {
-            this.putString("${args.distance} record", record)
-            this.putString("${args.distance} date", date)
+            putString("${args.distance} record", record)
+            putString("${args.distance} date", date)
         }
 
         findNavController().popBackStack()
+    }
 
+    private fun clearRecord() {
+        runningPreferences.edit {
+            remove("${args.distance} record")
+            remove("${args.distance} date")
+        }
+        findNavController().popBackStack()
     }
 
 
