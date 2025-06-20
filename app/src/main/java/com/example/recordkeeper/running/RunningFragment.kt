@@ -8,7 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.example.recordkeeper.ScreenData
 import com.example.recordkeeper.databinding.FragmentRunningBinding
+import com.example.recordkeeper.editrecord.EditRecordFragment
 
 
 class RunningFragment : Fragment() {
@@ -78,7 +80,11 @@ class RunningFragment : Fragment() {
     }
 
     private fun launchRunningRecordScreen(distance: String) {
-        val action = RunningFragmentDirections.actionRunningFragmentToEditRunningRecordFragment(distance = distance)
+        val action = RunningFragmentDirections.actionRunningFragmentToEditRecordFragment(
+            screenData = ScreenData(distance, "running", "Time")
+        )
+
+
         findNavController().navigate(action)
     }
 

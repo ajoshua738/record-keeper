@@ -10,38 +10,30 @@
         android:name="com.example.recordkeeper.running.RunningFragment"
         android:label="Running"
         tools:layout="@layout/fragment_running" >
+
         <action
-            android:id="@+id/action_runningFragment_to_editRunningRecordFragment"
-            app:destination="@id/editRunningRecordFragment" />
+            android:id="@+id/action_runningFragment_to_editRecordFragment"
+            app:destination="@id/editRecordFragment" />
     </fragment>
     <fragment
         android:id="@+id/cyclingFragment"
         android:name="com.example.recordkeeper.cycling.CyclingFragment"
         android:label="Cycling"
         tools:layout="@layout/fragment_cycling" >
-        <argument
-            android:name="distance"
-            app:argType="string" />
+
         <action
-            android:id="@+id/action_cyclingFragment_to_editCyclingRecordFragment"
-            app:destination="@id/editCyclingRecordFragment" />
+            android:id="@+id/action_cyclingFragment_to_editRecordFragment"
+            app:destination="@id/editRecordFragment" />
     </fragment>
     <fragment
-        android:id="@+id/editRunningRecordFragment"
-        android:name="com.example.recordkeeper.running.EditRunningRecordFragment"
-        android:label="{distance} Record"
-        tools:layout="@layout/fragment_edit_running_record" >
+        android:id="@+id/editRecordFragment"
+        android:name="com.example.recordkeeper.editrecord.EditRecordFragment"
+        android:label="Record"
+        tools:layout="@layout/fragment_edit_record" >
         <argument
-            android:name="distance"
-            app:argType="string" />
+            android:name="screenData"
+            app:argType="com.example.recordkeeper.ScreenData" />
     </fragment>
-    <fragment
-        android:id="@+id/editCyclingRecordFragment"
-        android:name="com.example.recordkeeper.cycling.EditCyclingRecordFragment"
-        android:label="{record} Record"
-        tools:layout="@layout/fragment_edit_cycling_record" >
-        <argument
-            android:name="record"
-            app:argType="string" />
-    </fragment>
+
+
 </navigation>
