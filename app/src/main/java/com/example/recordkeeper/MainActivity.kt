@@ -1,5 +1,6 @@
 package com.example.recordkeeper
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -11,6 +12,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.commit
@@ -20,7 +22,9 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.recordkeeper.cycling.CyclingFragment
 import com.example.recordkeeper.databinding.ActivityMainBinding
+import com.example.recordkeeper.running.RunningFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class MainActivity : AppCompatActivity() {
@@ -29,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var backPressedCallback: OnBackPressedCallback
+    private lateinit var navHostFragment: NavHostFragment
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,7 +89,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun setupNavController() {
-        val navHostFragment =
+        navHostFragment =
             supportFragmentManager.findFragmentById(binding.frameContent.id) as NavHostFragment
         navController = navHostFragment.navController
 
@@ -113,19 +118,56 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+        val menuClickHandled = when (item.itemId) {
             R.id.resetRunning -> {
+                showConfirmationDialog("running")
                 true
             }
             R.id.resetCycling -> {
+                showConfirmationDialog("cycling")
                 true
             }
             R.id.resetAll -> {
+                showConfirmationDialog("all")
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+
+
+        return menuClickHandled
     }
+
+    private fun showConfirmationDialog(selection: String) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Reset $selection records")
+            .setMessage("Are you aure you want to clear the records")
+            .setPositiveButton("Yes",{ dialog, which ->
+                when(selection) {
+                    "all" -> {
+                        getSharedPreferences("running", Context.MODE_PRIVATE).edit { clear() }
+                        getSharedPreferences("cycling", Context.MODE_PRIVATE).edit { clear() }
+                    }
+                    else -> {
+                        getSharedPreferences(selection, Context.MODE_PRIVATE).edit { clear() }
+                    }
+                }
+                refreshCurrentFragment()
+            })
+            .setNegativeButton("No", null)
+            .show()
+    }
+
+    private fun refreshCurrentFragment() {
+        val currentFragment = navHostFragment.childFragmentManager.fragments.firstOrNull()
+        if (currentFragment is RunningFragment) {
+            currentFragment.displayRecords()
+        }
+        else if(currentFragment is CyclingFragment) {
+            currentFragment.displayRecords()
+        }
+    }
+
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(binding.frameContent.id)

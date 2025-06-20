@@ -48,7 +48,7 @@ class CyclingFragment : Fragment() {
         displayRecords()
     }
 
-    private fun displayRecords() {
+    fun displayRecords() {
         binding.textLongestRideValue.text =  cyclingPreferences.getString("Longest Ride record", "No record set")
         binding.textLongestRideDate.text =  cyclingPreferences.getString("Longest Ride date", "No date set")
 

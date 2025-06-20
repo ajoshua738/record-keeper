@@ -34,9 +34,7 @@ class RunningFragment : Fragment() {
         setupClickListeners()
     }
 
-    private fun displayRecords() {
-
-
+    fun displayRecords() {
         binding.text5kmValue.text =  runningPreferences.getString("5km record", "No record set")
         binding.text5kmDate.text =  runningPreferences.getString("5km date", "No date set")
 
